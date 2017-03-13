@@ -1,0 +1,30 @@
+<% @posts.each do |post| %>
+  <div>
+  	<div><%= post.user.name %></div>
+    <%= link_to (image_tag post.image.url(:medium)), post_path(post) %>
+    <div><%= post.title %></div>
+  </div>
+	<% post.comments.each do |comment| %>
+	<div class='comment'>
+	<div class='name'><%= comment.user.name %></div>
+	<div class='comment-content'><%= comment.content %></div>
+		<% if comment.user == current_user %>
+		<%= link_to 'x', post_comment_path(post, comment), method: :delete, data: { confirm: "Are you sure?" } %>
+        <% end %>
+	<% end %>
+	</div>
+  <% post.likes.each do |like| %>
+		<div class='comment-like-form.row'>
+			<div class="like-button.col-sm-1">
+				<% if like.user == current_user %>
+				<span class="glyphicon glyphicon-heart-empty"><%= link_to post_like_path(post, like), method: :put %></span>
+				<% end %>
+			</div>
+		</div>
+  <% end %>
+	<%= form_for [post, post.comments.new] do |f| %>
+	<%= f.text_field :content, placeholder: 'Добавить комментарий ...' %>
+<% end %>
+  <br>
+<% end %>
+  <br>
